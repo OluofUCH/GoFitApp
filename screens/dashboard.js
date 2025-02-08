@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { View, Text, ScrollView, ActivityIndicator } from "react-native";
+import { View, Text, ScrollView, ActivityIndicator, Button } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { Dimensions } from "react-native";
 
-export default function Dashboard({ route }) {
+export default function Dashboard({ route, navigation }) {
   const { token } = route.params;
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,7 +19,6 @@ export default function Dashboard({ route }) {
           Authorization: `Bearer ${token}`,
         },
       });
-
       const data = await response.json();
       setActivities(data);
       setLoading(false);
@@ -29,7 +28,7 @@ export default function Dashboard({ route }) {
     }
   };
 
-  // Prepare data for charts
+  // Prepare data for charts (using up to 5 recent activities)
   const distanceData = activities.slice(0, 5).map((activity) => (activity.distance / 1000).toFixed(2));
   const heartRateData = activities
     .slice(0, 5)
@@ -38,6 +37,18 @@ export default function Dashboard({ route }) {
   return (
     <ScrollView className="flex-1 bg-gray-100 p-4">
       <Text className="text-xl font-bold text-center mb-4">Your Activities</Text>
+
+      {/* Button to navigate to the Profile screen */}
+      <View className="mb-4">
+        <Button
+          title="View Profile"
+          onPress={() => navigation.navigate("Profile", { token })}
+        />
+        {/* <Button
+  title="View Device Activity"
+  onPress={() => navigation.navigate('DeviceActivity')}
+/> */}
+      </View>
 
       {loading ? (
         <ActivityIndicator size="large" color="#000" />

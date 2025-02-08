@@ -69,4 +69,5 @@ export default function Health({ route }) {
           />
         </>
       )}
-    </Scr
+      </ScrollView>
+  )
